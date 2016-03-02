@@ -1,4 +1,6 @@
 
+#define pr_fmt(fmt) SND_SAMPLE_DRV_NAME ": " fmt
+
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
@@ -23,7 +25,7 @@ static int __init snd_sample_device_init(void)
 		return -ENOMEM;
 	}
 
-	PRINT_INFO("loaded.\n");
+	pr_info("loaded.\n");
 
 	return 0;
 }
@@ -32,7 +34,7 @@ static void __exit snd_sample_device_exit(void)
 {
 	platform_device_del(pdev);
 
-	PRINT_INFO("unloaded.\n");
+	pr_info("unloaded.\n");
 }
 
 module_init(snd_sample_device_init);

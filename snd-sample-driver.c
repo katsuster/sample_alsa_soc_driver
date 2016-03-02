@@ -1,4 +1,6 @@
 
+#define pr_fmt(fmt) SND_SAMPLE_DRV_NAME ": " fmt
+
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
@@ -6,40 +8,40 @@
 
 int snd_sample_dai_ops_startup(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI ops startup.\n");
+	pr_info("DAI ops startup.\n");
 
 	return 0;
 }
 
 void snd_sample_dai_ops_shutdown(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI ops shutdown.\n");
+	pr_info("DAI ops shutdown.\n");
 }
 
 int snd_sample_dai_ops_hw_params(struct snd_pcm_substream *substream, struct snd_pcm_hw_params *hwparam, struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI ops hw_params.\n");
+	pr_info("DAI ops hw_params.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_ops_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI ops hw_free.\n");
+	pr_info("DAI ops hw_free.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_ops_prepare(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI ops prepare.\n");
+	pr_info("DAI ops prepare.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_ops_trigger(struct snd_pcm_substream *substream, int cmd, struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI ops trigger.\n");
+	pr_info("DAI ops trigger.\n");
 
 	return 0;
 }
@@ -55,14 +57,14 @@ static struct snd_soc_dai_ops snd_sample_dai_ops = {
 
 int snd_sample_dai_probe(struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI probe.\n");
+	pr_info("DAI probe.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_remove(struct snd_soc_dai *dai)
 {
-	PRINT_INFO("DAI remove.\n");
+	pr_info("DAI remove.\n");
 	return 0;
 }
 
@@ -124,7 +126,7 @@ static struct snd_pcm_hardware snd_sample_pcm_hw = {
 
 static int snd_sample_pcm_open(struct snd_pcm_substream *substream)
 {
-	PRINT_INFO("open.\n");
+	pr_info("open.\n");
 
 	snd_soc_set_runtime_hwparams(substream, &snd_sample_pcm_hw);
 
@@ -140,14 +142,14 @@ static struct snd_pcm_ops snd_sample_pcm_ops = {
 
 int snd_sample_soc_platform_new(struct snd_soc_pcm_runtime *rtd)
 {
-	PRINT_INFO("New.\n");
+	pr_info("New.\n");
 
 	return 0;
 }
 
 void snd_sample_soc_platform_free(struct snd_pcm *pcm)
 {
-	PRINT_INFO("Free.\n");
+	pr_info("Free.\n");
 }
 
 static struct snd_soc_platform_driver snd_sample_soc_platform = {
@@ -165,12 +167,12 @@ static int snd_sample_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	int result;
 
-	PRINT_INFO("Probed.\n");
+	pr_info("Probed.\n");
 
 	d = devm_kzalloc(dev, sizeof(struct snd_sample_device),
 		GFP_KERNEL);
 	if (d == NULL) {
-		PRINT_ERR("Failed devm_kzalloc(snd_sample_device).\n");
+		pr_err("Failed devm_kzalloc(snd_sample_device).\n");
 		return -ENOMEM;
 	}
 	d->pdev = pdev;
@@ -179,20 +181,20 @@ static int snd_sample_probe(struct platform_device *pdev)
 	d->card = devm_kzalloc(dev, sizeof(struct snd_soc_card),
 		GFP_KERNEL);
 	if (d == NULL) {
-		PRINT_ERR("Failed devm_kzalloc(snd_soc_card).\n");
+		pr_err("Failed devm_kzalloc(snd_soc_card).\n");
 		return -ENOMEM;
 	}
 
 	result = devm_snd_soc_register_platform(dev, &snd_sample_soc_platform);
 	if (result) {
-		PRINT_ERR("Failed devm_snd_soc_register_platform().\n");
+		pr_err("Failed devm_snd_soc_register_platform().\n");
 		return result;
 	}
 
 	result = devm_snd_soc_register_component(dev, &snd_sample_soc_component,
 		snd_sample_dai, ARRAY_SIZE(snd_sample_dai));
 	if (result) {
-		PRINT_ERR("Failed devm_snd_soc_register_component().\n");
+		pr_err("Failed devm_snd_soc_register_component().\n");
 		return result;
 	}
 
@@ -204,7 +206,7 @@ static int snd_sample_probe(struct platform_device *pdev)
 	snd_soc_card_set_drvdata(d->card, d);
 	result = snd_soc_register_card(d->card);
 	if (result) {
-		PRINT_ERR("Failed snd_soc_register_card().\n");
+		pr_err("Failed snd_soc_register_card().\n");
 		return result;
 	}
 
@@ -215,7 +217,7 @@ static int snd_sample_remove(struct platform_device *pdev)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct snd_sample_device *d = snd_soc_card_get_drvdata(card);
-	PRINT_INFO("Removed.\n");
+	pr_info("Removed.\n");
 
 	snd_soc_unregister_card(d->card);
 
