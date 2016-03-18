@@ -4,7 +4,7 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
-#include "snd-sample-device.h"
+#include "sample-device.h"
 
 static struct platform_device *pdev = NULL;
 
@@ -12,7 +12,7 @@ static int __init snd_sample_device_init(void)
 {
 	int ret;
 
-	pdev = platform_device_alloc("snd_sample_driver", 0);
+	pdev = platform_device_alloc("snd-sample-driver", 0);
 	if (pdev == NULL) {
 		//error
 		return -ENOMEM;

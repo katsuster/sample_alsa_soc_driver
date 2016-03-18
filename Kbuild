@@ -1,4 +1,5 @@
 
+CONFIG_SND_SAMPLE_I2S = m
 CONFIG_SND_SAMPLE_DRIVER = m
 CONFIG_SND_SAMPLE_DEVICE = m
 # For debug
@@ -12,10 +13,10 @@ EXTRA_CFLAGS += $(DBGFLAGS)
 EXTRA_CFLAGS += -I$(LDDINC)
 
 
-# Sample platform bus driver
-snd-sample-drv-objs := snd-sample-driver.o snd-sample-utils.o
-obj-$(CONFIG_SND_SAMPLE_DRIVER) += snd-sample-drv.o
+# Sample ALSA SoC driver
+snd-sample-driver-objs := sample-driver.o sample-utils.o
+obj-$(CONFIG_SND_SAMPLE_DRIVER) += snd-sample-driver.o
 
-# Sample platform bus device
-snd-sample-dev1-objs := snd-sample-device.o snd-sample-utils.o
-obj-$(CONFIG_SND_SAMPLE_DEVICE) += snd-sample-dev1.o
+# Sample ALSA SoC device
+snd-sample-device-objs := sample-device.o sample-utils.o
+obj-$(CONFIG_SND_SAMPLE_DEVICE) += snd-sample-device.o

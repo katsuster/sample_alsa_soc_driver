@@ -1,10 +1,10 @@
 
-#ifndef SND_SAMPLE_DRIVER_H__
-#define SND_SAMPLE_DRIVER_H__
+#ifndef SAMPLE_DRIVER_H__
+#define SAMPLE_DRIVER_H__
 
 #include <sound/soc.h>
 
-#include "snd-sample-utils.h"
+#include "sample-utils.h"
 
 struct snd_sample_device {
 	struct platform_device *pdev;
@@ -13,4 +13,4 @@ struct snd_sample_device {
 	struct snd_soc_card *card;
 };
 
-#endif /* SND_SAMPLE_DRIVER_H__ */
+#endif /* SAMPLE_DRIVER_H__ */

@@ -4,7 +4,7 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
-#include "snd-sample-driver.h"
+#include "sample-driver.h"
 
 int snd_sample_dai_ops_startup(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
@@ -70,7 +70,7 @@ int snd_sample_dai_remove(struct snd_soc_dai *dai)
 
 static struct snd_soc_dai_driver snd_sample_dai[] = {
 	{
-		.name   = "sample_dai0",
+		.name   = "sample-dai0",
 		.probe  = snd_sample_dai_probe,
 		.remove = snd_sample_dai_remove,
 		.playback = {
@@ -82,7 +82,7 @@ static struct snd_soc_dai_driver snd_sample_dai[] = {
 		.ops = &snd_sample_dai_ops,
 	},
 	{
-		.name   = "sample_dai1",
+		.name   = "sample-dai1",
 		.probe  = snd_sample_dai_probe,
 		.remove = snd_sample_dai_remove,
 		.capture = {
@@ -103,8 +103,8 @@ static struct snd_soc_dai_link snd_sample_soc_dai_links[] = {
 	{
 		.name           = "sample_dai_link",
 		.stream_name    = "sample_stream",
-		.cpu_dai_name   = "sample_dai0",
-		.platform_name  = "snd_sample_driver.0",
+		.cpu_dai_name   = "sample-dai0",
+		.platform_name  = "snd-sample-driver.0",
 		.codec_name     = "snd-soc-dummy",
 		.codec_dai_name = "snd-soc-dummy-dai",
 	},
@@ -198,7 +198,7 @@ static int snd_sample_probe(struct platform_device *pdev)
 		return result;
 	}
 
-	d->card->name  = "sample_soc_card";
+	d->card->name  = "sample-soc-card";
 	d->card->dev   = dev;
 	d->card->owner = THIS_MODULE;
 	d->card->dai_link = snd_sample_soc_dai_links;
@@ -217,6 +217,7 @@ static int snd_sample_remove(struct platform_device *pdev)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct snd_sample_device *d = snd_soc_card_get_drvdata(card);
+
 	pr_info("Removed.\n");
 
 	snd_soc_unregister_card(d->card);
@@ -228,10 +229,9 @@ static struct platform_driver snd_sample_driver = {
 	.probe  = snd_sample_probe,
 	.remove = snd_sample_remove,
 	.driver = {
-		.name   = "snd_sample_driver"
+		.name   = "snd-sample-driver"
 	},
 };
-
 module_platform_driver(snd_sample_driver);
 
 MODULE_AUTHOR("Katsuhiro Suzuki <katsuhiro@katsuster.net>");
