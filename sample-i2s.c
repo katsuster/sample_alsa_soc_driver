@@ -1,10 +1,10 @@
 
-#define pr_fmt(fmt) SND_SAMPLE_DRV_NAME ": " fmt
+#define pr_fmt(fmt) SND_SAMPLE_DRV_NAME "-i2s: " fmt
 
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
-#include "sample-driver.h"
+#include "sample-core.h"
 
 int snd_sample_dai_ops_startup(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
@@ -65,12 +65,13 @@ int snd_sample_dai_probe(struct snd_soc_dai *dai)
 int snd_sample_dai_remove(struct snd_soc_dai *dai)
 {
 	pr_info("DAI remove.\n");
+
 	return 0;
 }
 
 static struct snd_soc_dai_driver snd_sample_dai[] = {
 	{
-		.name   = "sample-dai0",
+		.name   = SND_SAMPLE_DRV_NAME "-i2s-dai0",
 		.probe  = snd_sample_dai_probe,
 		.remove = snd_sample_dai_remove,
 		.playback = {
@@ -82,7 +83,7 @@ static struct snd_soc_dai_driver snd_sample_dai[] = {
 		.ops = &snd_sample_dai_ops,
 	},
 	{
-		.name   = "sample-dai1",
+		.name   = SND_SAMPLE_DRV_NAME "-i2s-dai1",
 		.probe  = snd_sample_dai_probe,
 		.remove = snd_sample_dai_remove,
 		.capture = {
@@ -96,18 +97,7 @@ static struct snd_soc_dai_driver snd_sample_dai[] = {
 };
 
 static struct snd_soc_component_driver snd_sample_soc_component = {
-	.name = "snd-sample-component",
-};
-
-static struct snd_soc_dai_link snd_sample_soc_dai_links[] = {
-	{
-		.name           = "sample_dai_link",
-		.stream_name    = "sample_stream",
-		.cpu_dai_name   = "sample-dai0",
-		.platform_name  = "snd-sample-driver.0",
-		.codec_name     = "snd-soc-dummy",
-		.codec_dai_name = "snd-soc-dummy-dai",
-	},
+	.name = SND_SAMPLE_DRV_NAME "-i2s-component",
 };
 
 
@@ -161,29 +151,24 @@ static struct snd_soc_platform_driver snd_sample_soc_platform = {
 
 
 
-static int snd_sample_probe(struct platform_device *pdev)
+static int snd_sample_i2s_probe(struct platform_device *pdev)
 {
-	struct snd_sample_device *d;
+	struct snd_sample_i2s *d;
 	struct device *dev = &pdev->dev;
 	int result;
 
 	pr_info("Probed.\n");
 
-	d = devm_kzalloc(dev, sizeof(struct snd_sample_device),
+	d = devm_kzalloc(dev, sizeof(struct snd_sample_i2s),
 		GFP_KERNEL);
 	if (d == NULL) {
-		pr_err("Failed devm_kzalloc(snd_sample_device).\n");
+		pr_err("Failed devm_kzalloc(snd_sample_i2s).\n");
 		return -ENOMEM;
 	}
 	d->pdev = pdev;
 	d->dev = dev;
 
-	d->card = devm_kzalloc(dev, sizeof(struct snd_soc_card),
-		GFP_KERNEL);
-	if (d == NULL) {
-		pr_err("Failed devm_kzalloc(snd_soc_card).\n");
-		return -ENOMEM;
-	}
+	platform_set_drvdata(pdev, d);
 
 	result = devm_snd_soc_register_platform(dev, &snd_sample_soc_platform);
 	if (result) {
@@ -198,42 +183,30 @@ static int snd_sample_probe(struct platform_device *pdev)
 		return result;
 	}
 
-	d->card->name  = "sample-soc-card";
-	d->card->dev   = dev;
-	d->card->owner = THIS_MODULE;
-	d->card->dai_link = snd_sample_soc_dai_links;
-	d->card->num_links = ARRAY_SIZE(snd_sample_soc_dai_links);
-	snd_soc_card_set_drvdata(d->card, d);
-	result = snd_soc_register_card(d->card);
-	if (result) {
-		pr_err("Failed snd_soc_register_card().\n");
-		return result;
-	}
+	/* example of common utility function in an other *.ko */
+	snd_sample_util_func();
 
 	return 0;
 }
 
-static int snd_sample_remove(struct platform_device *pdev)
+static int snd_sample_i2s_remove(struct platform_device *pdev)
 {
-	struct snd_soc_card *card = platform_get_drvdata(pdev);
-	struct snd_sample_device *d = snd_soc_card_get_drvdata(card);
+	//struct snd_sample_i2s *d = platform_get_drvdata(pdev);
 
 	pr_info("Removed.\n");
 
-	snd_soc_unregister_card(d->card);
-
 	return 0;
 }
 
-static struct platform_driver snd_sample_driver = {
-	.probe  = snd_sample_probe,
-	.remove = snd_sample_remove,
+static struct platform_driver snd_sample_i2s_driver = {
 	.driver = {
-		.name   = "snd-sample-driver"
+		.name   = SND_SAMPLE_DRV_NAME "-i2s"
 	},
+	.probe  = snd_sample_i2s_probe,
+	.remove = snd_sample_i2s_remove,
 };
-module_platform_driver(snd_sample_driver);
+module_platform_driver(snd_sample_i2s_driver);
 
 MODULE_AUTHOR("Katsuhiro Suzuki <katsuhiro@katsuster.net>");
-MODULE_DESCRIPTION("Sample ALSA SoC driver");
+MODULE_DESCRIPTION("Sample ALSA SoC I2S driver");
 MODULE_LICENSE("GPL");
