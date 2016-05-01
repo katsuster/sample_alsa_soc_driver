@@ -168,6 +168,15 @@ int snd_sample_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 {
 	pr_info("PCM trigger.\n");
 
+	switch (cmd) {
+	case SNDRV_PCM_TRIGGER_START:
+		pr_info("PCM trigger: start.\n");
+		break;
+	case SNDRV_PCM_TRIGGER_STOP:
+		pr_info("PCM trigger: stop.\n");
+		break;
+	}
+
 	return 0;
 }
 
