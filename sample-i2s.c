@@ -8,6 +8,8 @@
 
 int snd_sample_dai_ops_startup(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
+	//struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+
 	pr_info("DAI ops startup.\n");
 
 	return 0;
@@ -116,15 +118,74 @@ static struct snd_pcm_hardware snd_sample_pcm_hw = {
 
 static int snd_sample_pcm_open(struct snd_pcm_substream *substream)
 {
-	pr_info("open.\n");
+	pr_info("PCM open.\n");
 
 	snd_soc_set_runtime_hwparams(substream, &snd_sample_pcm_hw);
 
 	return 0;
 }
 
+int snd_sample_pcm_close(struct snd_pcm_substream *substream)
+{
+	pr_info("PCM close.\n");
+
+	return 0;
+}
+
+int snd_sample_pcm_hw_params(struct snd_pcm_substream *substream, struct snd_pcm_hw_params *params)
+{
+	struct snd_pcm_runtime *runtime = substream->runtime;
+	unsigned int sz = params_buffer_bytes(params);
+
+	pr_info("PCM hw_params buf:%d.\n", sz);
+
+	if (runtime->dma_area) {
+		kfree(runtime->dma_area);
+
+	}
+
+	runtime->dma_area = kzalloc(sz, GFP_KERNEL);
+	runtime->dma_bytes = sz;
+
+	return 0;
+}
+
+int snd_sample_pcm_hw_free(struct snd_pcm_substream *substream)
+{
+	pr_info("PCM hw_free.\n");
+
+	return 0;
+}
+
+int snd_sample_pcm_prepare(struct snd_pcm_substream *substream)
+{
+	pr_info("PCM prepare.\n");
+
+	return 0;
+}
+
+int snd_sample_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
+{
+	pr_info("PCM trigger.\n");
+
+	return 0;
+}
+
+snd_pcm_uframes_t snd_sample_pcm_pointer(struct snd_pcm_substream *substream)
+{
+	pr_info("PCM pointer.\n");
+
+	return 0;
+}
+
 static struct snd_pcm_ops snd_sample_pcm_ops = {
-	.open = snd_sample_pcm_open,
+	.open      = snd_sample_pcm_open,
+	.close     = snd_sample_pcm_close,
+	.hw_params = snd_sample_pcm_hw_params,
+	.hw_free   = snd_sample_pcm_hw_free,
+	.prepare   = snd_sample_pcm_prepare,
+	.trigger   = snd_sample_pcm_trigger,
+	.pointer   = snd_sample_pcm_pointer,
 };
 
 
