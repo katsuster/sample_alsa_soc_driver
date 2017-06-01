@@ -1,6 +1,4 @@
 
-#define pr_fmt(fmt) SND_SAMPLE_DRV_NAME "-dev: " fmt
-
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
@@ -26,6 +24,7 @@ static int __init snd_sample_device_init(void)
 		ret = -ENOMEM;
 		goto err_out_i2s;
 	}
+	dev_info(&pdev_i2s->dev, "created.\n");
 
 	/*
 	 * Add SPDIF CODEC.
@@ -45,6 +44,7 @@ static int __init snd_sample_device_init(void)
 		ret = -ENOMEM;
 		goto err_out_spdif;
 	}
+	dev_info(&pdev_spdif->dev, "created.\n");
 
 	/* Add sample ASoC card */
 	pdev_i2s_spdif = platform_device_alloc(SND_SAMPLE_DRV_NAME "-i2s-spdif", 0);
@@ -58,6 +58,7 @@ static int __init snd_sample_device_init(void)
 		ret = -ENOMEM;
 		goto err_out_i2s_spdif;
 	}
+	dev_info(&pdev_i2s_spdif->dev, "created.\n");
 
 	pr_info("loaded.\n");
 

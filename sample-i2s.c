@@ -1,6 +1,4 @@
 
-#define pr_fmt(fmt) SND_SAMPLE_DRV_NAME "-i2s: " fmt
-
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
@@ -8,42 +6,58 @@
 
 int snd_sample_dai_ops_startup(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	//struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
 
-	pr_info("DAI ops startup.\n");
+	dev_info(dev, "DAI ops startup.\n");
 
 	return 0;
 }
 
 void snd_sample_dai_ops_shutdown(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	pr_info("DAI ops shutdown.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "DAI ops shutdown.\n");
 }
 
 int snd_sample_dai_ops_hw_params(struct snd_pcm_substream *substream, struct snd_pcm_hw_params *hwparam, struct snd_soc_dai *dai)
 {
-	pr_info("DAI ops hw_params.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "DAI ops hw_params.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_ops_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	pr_info("DAI ops hw_free.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "DAI ops hw_free.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_ops_prepare(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
-	pr_info("DAI ops prepare.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "DAI ops prepare.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_ops_trigger(struct snd_pcm_substream *substream, int cmd, struct snd_soc_dai *dai)
 {
-	pr_info("DAI ops trigger.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "DAI ops trigger.\n");
 
 	return 0;
 }
@@ -59,14 +73,20 @@ static struct snd_soc_dai_ops snd_sample_dai_ops = {
 
 int snd_sample_dai_probe(struct snd_soc_dai *dai)
 {
-	pr_info("DAI probe.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "DAI probe.\n");
 
 	return 0;
 }
 
 int snd_sample_dai_remove(struct snd_soc_dai *dai)
 {
-	pr_info("DAI remove.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "DAI remove.\n");
 
 	return 0;
 }
@@ -118,7 +138,11 @@ static struct snd_pcm_hardware snd_sample_pcm_hw = {
 
 static int snd_sample_pcm_open(struct snd_pcm_substream *substream)
 {
-	pr_info("PCM open.\n");
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "PCM open.\n");
 
 	snd_soc_set_runtime_hwparams(substream, &snd_sample_pcm_hw);
 
@@ -127,17 +151,24 @@ static int snd_sample_pcm_open(struct snd_pcm_substream *substream)
 
 int snd_sample_pcm_close(struct snd_pcm_substream *substream)
 {
-	pr_info("PCM close.\n");
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "PCM close.\n");
 
 	return 0;
 }
 
 int snd_sample_pcm_hw_params(struct snd_pcm_substream *substream, struct snd_pcm_hw_params *params)
 {
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	unsigned int sz = params_buffer_bytes(params);
 
-	pr_info("PCM hw_params buf:%d.\n", sz);
+	dev_info(dev, "PCM hw_params buf:%d.\n", sz);
 
 	if (runtime->dma_area) {
 		kfree(runtime->dma_area);
@@ -152,28 +183,40 @@ int snd_sample_pcm_hw_params(struct snd_pcm_substream *substream, struct snd_pcm
 
 int snd_sample_pcm_hw_free(struct snd_pcm_substream *substream)
 {
-	pr_info("PCM hw_free.\n");
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "PCM hw_free.\n");
 
 	return 0;
 }
 
 int snd_sample_pcm_prepare(struct snd_pcm_substream *substream)
 {
-	pr_info("PCM prepare.\n");
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "PCM prepare.\n");
 
 	return 0;
 }
 
 int snd_sample_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 {
-	pr_info("PCM trigger.\n");
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "PCM trigger.\n");
 
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
-		pr_info("PCM trigger: start.\n");
+		dev_info(dev, "PCM trigger: start.\n");
 		break;
 	case SNDRV_PCM_TRIGGER_STOP:
-		pr_info("PCM trigger: stop.\n");
+		dev_info(dev, "PCM trigger: stop.\n");
 		break;
 	}
 
@@ -182,7 +225,11 @@ int snd_sample_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 
 snd_pcm_uframes_t snd_sample_pcm_pointer(struct snd_pcm_substream *substream)
 {
-	pr_info("PCM pointer.\n");
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "PCM pointer.\n");
 
 	return 0;
 }
@@ -202,14 +249,21 @@ static struct snd_pcm_ops snd_sample_pcm_ops = {
 
 int snd_sample_soc_platform_new(struct snd_soc_pcm_runtime *rtd)
 {
-	pr_info("New.\n");
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "New.\n");
 
 	return 0;
 }
 
 void snd_sample_soc_platform_free(struct snd_pcm *pcm)
 {
-	pr_info("Free.\n");
+	struct snd_soc_pcm_runtime *rtd = snd_pcm_chip(pcm);
+	struct snd_sample_i2s *d = snd_soc_dai_get_drvdata(rtd->cpu_dai);
+	struct device *dev = d->dev;
+
+	dev_info(dev, "Free.\n");
 }
 
 static struct snd_soc_platform_driver snd_sample_soc_platform = {
@@ -223,16 +277,16 @@ static struct snd_soc_platform_driver snd_sample_soc_platform = {
 
 static int snd_sample_i2s_probe(struct platform_device *pdev)
 {
-	struct snd_sample_i2s *d;
 	struct device *dev = &pdev->dev;
+	struct snd_sample_i2s *d;
 	int result;
 
-	pr_info("Probed.\n");
+	dev_info(dev, "Probed.\n");
 
 	d = devm_kzalloc(dev, sizeof(struct snd_sample_i2s),
 		GFP_KERNEL);
 	if (d == NULL) {
-		pr_err("Failed devm_kzalloc(snd_sample_i2s).\n");
+		dev_err(dev, "Failed devm_kzalloc(snd_sample_i2s).\n");
 		return -ENOMEM;
 	}
 	d->pdev = pdev;
@@ -242,14 +296,14 @@ static int snd_sample_i2s_probe(struct platform_device *pdev)
 
 	result = devm_snd_soc_register_platform(dev, &snd_sample_soc_platform);
 	if (result) {
-		pr_err("Failed devm_snd_soc_register_platform().\n");
+		dev_err(dev, "Failed devm_snd_soc_register_platform().\n");
 		return result;
 	}
 
 	result = devm_snd_soc_register_component(dev, &snd_sample_soc_component,
 		snd_sample_dai, ARRAY_SIZE(snd_sample_dai));
 	if (result) {
-		pr_err("Failed devm_snd_soc_register_component().\n");
+		dev_err(dev, "Failed devm_snd_soc_register_component().\n");
 		return result;
 	}
 
@@ -261,9 +315,10 @@ static int snd_sample_i2s_probe(struct platform_device *pdev)
 
 static int snd_sample_i2s_remove(struct platform_device *pdev)
 {
+	struct device *dev = &pdev->dev;
 	//struct snd_sample_i2s *d = platform_get_drvdata(pdev);
 
-	pr_info("Removed.\n");
+	dev_info(dev, "Removed.\n");
 
 	return 0;
 }

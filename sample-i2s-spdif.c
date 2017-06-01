@@ -1,6 +1,4 @@
 
-#define pr_fmt(fmt) SND_SAMPLE_DRV_NAME "-i2s-spdif: " fmt
-
 #include <linux/module.h>
 #include <linux/platform_device.h>
 
@@ -27,16 +25,16 @@ static struct snd_soc_dai_link snd_sample_soc_dai_links[] = {
 
 static int snd_sample_i2s_spdif_probe(struct platform_device *pdev)
 {
-	struct snd_sample_i2s_spdif *d;
 	struct device *dev = &pdev->dev;
+	struct snd_sample_i2s_spdif *d;
 	int result;
 
-	pr_info("Probed.\n");
+	dev_info(dev, "Probed.\n");
 
 	d = devm_kzalloc(dev, sizeof(struct snd_sample_i2s_spdif),
 		GFP_KERNEL);
 	if (d == NULL) {
-		pr_err("Failed devm_kzalloc(snd_sample_i2s_spdif).\n");
+		dev_err(dev, "Failed devm_kzalloc(snd_sample_i2s_spdif).\n");
 		return -ENOMEM;
 	}
 	d->pdev = pdev;
@@ -45,7 +43,7 @@ static int snd_sample_i2s_spdif_probe(struct platform_device *pdev)
 	d->card = devm_kzalloc(dev, sizeof(struct snd_soc_card),
 		GFP_KERNEL);
 	if (d == NULL) {
-		pr_err("Failed devm_kzalloc(snd_soc_card).\n");
+		dev_err(dev, "Failed devm_kzalloc(snd_soc_card).\n");
 		return -ENOMEM;
 	}
 	snd_soc_card_set_drvdata(d->card, d);
@@ -57,7 +55,7 @@ static int snd_sample_i2s_spdif_probe(struct platform_device *pdev)
 	d->card->num_links = ARRAY_SIZE(snd_sample_soc_dai_links);
 	result = snd_soc_register_card(d->card);
 	if (result) {
-		pr_err("Failed snd_soc_register_card().\n");
+		dev_err(dev, "Failed snd_soc_register_card().\n");
 		return result;
 	}
 
@@ -66,10 +64,11 @@ static int snd_sample_i2s_spdif_probe(struct platform_device *pdev)
 
 static int snd_sample_i2s_spdif_remove(struct platform_device *pdev)
 {
+	struct device *dev = &pdev->dev;
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	struct snd_sample_i2s_spdif *d = snd_soc_card_get_drvdata(card);
 
-	pr_info("Removed.\n");
+	dev_info(dev, "Removed.\n");
 
 	snd_soc_unregister_card(d->card);
 
