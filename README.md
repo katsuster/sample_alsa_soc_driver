@@ -48,20 +48,23 @@ Run modprobe if you set CONFIG_SND_SOC=m before running insmod.
     # insmod snd-sample-i2s.ko
     # insmod snd-sample-i2s-spdif.ko
     # insmod snd-sample-device.ko
-    snd-sample-i2s: Probed.
-    snd-sample: util_func.
-    snd-sample-i2s-spdif: Probed.
-    snd-sample-i2s: DAI probe.
-    snd-sample-i2s: New.
-    snd-sample-i2s-spdif snd-sample-i2s-spdif.0: dit-hifi <-> snd-sample-i2s-dai0 mapping ok
-    snd-sample-dev: loaded.
+    snd-sample-i2s snd-sample-i2s.0: Probed.
+    util_func.
+    snd-sample-i2s snd-sample-i2s.0: created.
+    platform spdif-dit.0: created.
+    snd-sample-i2s-spdif snd-sample-i2s-spdif.0: Probed.
+    snd-sample-i2s snd-sample-i2s.0: DAI probe.
+    snd-sample-i2s snd-sample-i2s.0: New.
+    snd-sample-i2s-spdif snd-sample-i2s-spdif.0: snd-soc-dummy-dai <-> snd-sample-i2s-dai0 mapping ok
+    snd-sample-i2s-spdif snd-sample-i2s-spdif.0: created.
+    loaded.
 
     # rmmod snd-sample-device
-    snd-sample-i2s-spdif: Removed.
-    snd-sample-i2s: DAI remove.
-    snd-sample-i2s: Free.
-    snd-sample-i2s: Removed.
-    snd-sample-dev: unloaded.
+    snd-sample-i2s-spdif snd-sample-i2s-spdif.0: Removed.
+    snd-sample-i2s snd-sample-i2s.0: DAI remove.
+    snd-sample-i2s snd-sample-i2s.0: Free.
+    snd-sample-i2s snd-sample-i2s.0: Removed.
+    unloaded.
 
     # rmmod snd-sample-i2s
     # rmmod snd-sample-i2s-spdif
