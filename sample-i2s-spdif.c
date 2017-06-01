@@ -33,10 +33,9 @@ static int snd_sample_i2s_spdif_probe(struct platform_device *pdev)
 
 	d = devm_kzalloc(dev, sizeof(struct snd_sample_i2s_spdif),
 		GFP_KERNEL);
-	if (d == NULL) {
-		dev_err(dev, "Failed devm_kzalloc(snd_sample_i2s_spdif).\n");
+	if (d == NULL)
 		return -ENOMEM;
-	}
+
 	d->pdev = pdev;
 	d->dev = dev;
 

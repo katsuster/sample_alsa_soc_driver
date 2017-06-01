@@ -4,9 +4,9 @@
 
 #include "sample-core.h"
 
-static struct platform_device *pdev_i2s = NULL;
-static struct platform_device *pdev_spdif = NULL;
-static struct platform_device *pdev_i2s_spdif = NULL;
+static struct platform_device *pdev_i2s;
+static struct platform_device *pdev_spdif;
+static struct platform_device *pdev_i2s_spdif;
 
 static int __init snd_sample_device_init(void)
 {
@@ -47,7 +47,8 @@ static int __init snd_sample_device_init(void)
 	dev_info(&pdev_spdif->dev, "created.\n");
 
 	/* Add sample ASoC card */
-	pdev_i2s_spdif = platform_device_alloc(SND_SAMPLE_DRV_NAME "-i2s-spdif", 0);
+	pdev_i2s_spdif = platform_device_alloc(
+		SND_SAMPLE_DRV_NAME "-i2s-spdif", 0);
 	if (pdev_i2s_spdif == NULL) {
 		ret = -ENOMEM;
 		goto err_out_spdif;
